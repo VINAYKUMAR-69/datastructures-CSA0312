@@ -1,0 +1,27 @@
+#include <stdio.h>
+int isprime(int n,int div)
+{
+ if(div<2)
+ {
+ return 1;
+ }
+ if(n%div==0)
+ {
+ return 0;
+ }
+return isprime(n,div-1);
+}
+int main()
+{
+ int a;
+ printf("enter the number");
+ scanf("%d",&a);
+ if(isprime(a,a-1))
+ {
+ printf("it is prime number");
+ }
+ else
+ {
+ printf("it is not prime number");
+ }
+ return 0;
