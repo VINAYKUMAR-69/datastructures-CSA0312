@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Insert a node into the BST
+struct Node* insert(struct Node* root, int data) {
+    if (root == NULL) {
+        struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->data = data;
+        newNode->left = newNode->right = NULL;
+        return newNode;
+    }
+    if (data < root->data)
+        root->left = insert(root->left, data);
+    else
+        root->right = insert(root->right, data);
+    return root;
+}
+
+// Search for a key in the BST
+struct Node* search(struct Node* root, int key) {
+    if (root == NULL || root->data == key) return root;
+    return (key < root->data) ? search(root->left, key) : search(root->right, key);
+}
+
+// In-order traversal (left, root, right)
+void inOrder(struct Node* root) {
+    if (root) {
+        inOrder(root->left);
+        printf("%d ", root->data);
+        inOrder(root->right);
+    }
+}
+
+int main() {
+    struct Node* root = NULL;
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 70);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 60);
+    insert(root, 80);
+
+    printf("In-order traversal: ");
+    inOrder(root);
+    printf("\n");
+
+    int key = 40;
+    struct Node* result = search(root, key);
+    if (result) printf("Found %d in the BST.\n", key);
+    else printf("Not found %d in the BST.\n", key);
+
+    return 0;
+}
