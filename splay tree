@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Right rotation
+struct Node* rightRotate(struct Node* x) {
+    struct Node* y = x->left;
+    x->left = y->right;
+    y->right = x;
+    return y;
+}
+
+// Left rotation
+struct Node* leftRotate(struct Node* x) {
+    struct Node* y = x->right;
+    x->right = y->left;
+    y->left = x;
+    return y;
+}
+
+// Splay operation
+struct Node* splay(struct Node* root, int key) {
+    if (root == NULL || root->data == key) return root;
+
+    // Key is in left subtree
+    if (key < root->data) {
+        if (root->left == NULL) return root;
+        if (key < root->left->data) {
+            root = rightRotate(root);
+            root = splay(root, key);
+        }
+        else if (key > root->left->data) {
+            root->left = leftRotate(root->left);
+            root = rightRotate(root);
+            root = splay(root, key);
+        }
+    }
+    // Key is in right subtree
+    else {
+        if (root->right == NULL) return root;
+        if (key > root->right->data) {
+            root = leftRotate(root);
+            root = splay(root, key);
+        }
+        else if (key < root->right->data) {
+            root->right = rightRotate(root->right);
+            root = leftRotate(root);
+            root = splay(root, key);
+        }
+    }
+    return root;
+}
+
+// Insertion into Splay Tree
+struct Node* insert(struct Node* root, int key) {
+    if (root == NULL) {
+        root = (struct Node*)malloc(sizeof(struct Node));
+        root->data = key;
+        root->left = root->right = NULL;
+        return root;
+    }
+    root = splay(root, key);
+    if (root->data == key) return root;
+
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = key;
+    if (key < root->data) {
+        newNode->right = root;
+        newNode->left = root->left;
+        root->left = NULL;
+    }
+    else {
+        newNode->left = root;
+        newNode->right = root->right;
+        root->right = NULL;
+    }
+    return newNode;
+}
+
+// In-order traversal
+void inOrder(struct Node* root) {
+    if (root == NULL) return;
+    inOrder(root->left);
+    printf("%d ", root->data);
+    inOrder(root->right);
+}
+
+int main() {
+    struct Node* root = NULL;
+    root = insert(root, 10);
+    root = insert(root, 20);
+    root = insert(root, 30);
+    root = insert(root, 5);
+    root = insert(root, 15);
+
+    printf("In-order traversal: ");
+    inOrder(root);
+    printf("\n");
+
+    return 0;
+}
