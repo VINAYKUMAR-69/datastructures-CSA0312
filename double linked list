@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the Node structure
+struct Node {
+    int data;
+    struct Node* next;
+    struct Node* prev;
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    newNode->prev = NULL;
+    return newNode;
+}
+
+// Function to insert at the beginning
+void insertAtBeginning(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head != NULL) {
+        newNode->next = *head;
+        (*head)->prev = newNode;
+    }
+    *head = newNode;
+}
+
+// Function to insert at the end
+void insertAtEnd(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+    struct Node* temp = *head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    newNode->prev = temp;
+}
+
+// Function to display the list in forward order
+void displayForward(struct Node* head) {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Function to display the list in reverse order
+void displayBackward(struct Node* head) {
+    struct Node* temp = head;
+    // Move to the end of the list
+    while (temp && temp->next != NULL) {
+        temp = temp->next;
+    }
+    // Traverse backwards
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->prev;
+    }
+    printf("NULL\n");
+}
+
+// Main function to demonstrate the operations
+int main() {
+    struct Node* head = NULL;
+
+    // Insert elements
+    insertAtBeginning(&head, 10);
+    insertAtBeginning(&head, 20);
+    insertAtEnd(&head, 30);
+    insertAtEnd(&head, 40);
+
+    // Display the list in forward and backward order
+    printf("Doubly Linked List in Forward Order: ");
+    displayForward(head);
+
+    printf("Doubly Linked List in Backward Order: ");
+    displayBackward(head);
+
+    return 0;
+}
